@@ -1,0 +1,6 @@
+Dept_ID,Dept_Name,Floor_No,Manager_ID
+1,Casual Shoes,1,1000
+2,Formal Shoes,2,1001
+3,Athletic Shoes,3,1002
+4,Kids Shoes,1,1003
+5,Sandals,2,1004
