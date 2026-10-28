@@ -1,0 +1,31 @@
+Shoe_ID,Brand,Model,Size,Color,Price,Stock_Qty,Dept_ID
+3000,Nike,Air Force 1,9,White,115,18,1
+3001,Adidas,Stan Smith,8.5,White,100,12,1
+3002,New Balance,574,10,Gray,99.99,25,1
+3003,Converse,Chuck Taylor All Star,7.5,Red,65,30,1
+3004,Vans,Old Skool,9.5,Black,75,22,1
+3005,Puma,Suede Classic,8,Blue,75,16,1
+3006,Clarks,Tilden Cap,10,Black,100,10,2
+3007,Cole Haan,OriginalGrand,9.5,Brown,150,8,2
+3008,Florsheim,Midtown Cap Toe,11,Black,120,12,2
+3009,Johnston & Murphy,Melton,10.5,Brown,169.99,7,2
+3010,Clarks,Whiddon Cap,9,Dark Brown,110,9,2
+3011,Dockers,Gordon,11.5,Black,80,15,2
+3012,Nike,Pegasus,9,Blue,140,20,3
+3013,Adidas,Adizero,10,White,130,17,3
+3014,ASICS,Gel-Kayano,8.5,Black,165,13,3
+3015,Brooks,Ghost,9.5,Gray,140,19,3
+3016,Saucony,Ride,10.5,Blue,140,14,3
+3017,Hoka,Clifton,8,White,150,16,3
+3018,Nike,Star Runner,4,Black,55,24,4
+3019,Adidas,Grand Court Kids,3.5,White,50,20,4
+3020,Skechers,Ultra Flex Kids,2,Blue,45,28,4
+3021,New Balance,574 Kids,4.5,Gray,60,17,4
+3022,Converse,Chuck Taylor Kids,3,Red,40,23,4
+3023,Vans,Old Skool Kids,5,Black,50,15,4
+3024,Birkenstock,Arizona,9,Brown,115,18,5
+3025,Teva,Original Universal,8,Black,55,21,5
+3026,Clarks,Breeze Sea,7,Navy,55,16,5
+3027,Skechers,Reggae Slim,8,Black,60,19,5
+3028,Crocs,Classic Sandal,9,White,40,26,5
+3029,Adidas,Adilette Comfort,10,Black,35,24,5

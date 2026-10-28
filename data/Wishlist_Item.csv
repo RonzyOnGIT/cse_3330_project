@@ -1,0 +1,16 @@
+Customer_ID,Item_No,Shoe_ID,Date_Added,Priority_Level,Notes
+2000,1,3001,2026-08-05,High,Easy match --hard to resist
+2000,2,3015,2026-08-12,Medium,Comfort may close this sale
+2005,1,3008,2026-07-20,High,Interview-ready in black
+2005,2,3011,2026-08-02,Medium,"Formal look, friendlier price"
+2005,3,3023,2026-08-18,Low,Kids approve. Wallet may too.
+2012,1,3003,2026-07-15,Medium,Red enough to get noticed
+2012,2,3017,2026-08-09,High,Comfort worth a test run
+2012,3,3026,2026-08-22,Low,Navy pairs well with summer
+2020,1,3004,2026-07-28,High,Black—zero outfit arguments
+2020,2,3018,2026-08-11,High,"Kid-ready, parent-approved price"
+2020,3,3029,2026-08-25,Medium,Comfort at an easy price
+2025,1,3000,2026-08-06,High,Classic white rarely stays lonely
+2025,2,3009,2026-08-10,Medium,Brown means business
+2025,3,3012,2026-08-16,High,Try once before saying no
+2025,4,3024,2026-08-24,Low,Comfort could beat the price
