@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shoe Store Database</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #222; background: #fff; font-family: Arial, sans-serif; font-size: 15px; }
+    header { padding: 22px 24px 0; border-bottom: 1px solid #ccc; }
+    h1 { margin: 0 0 18px; font-size: 24px; }
+    nav { display: flex; flex-wrap: wrap; gap: 6px; }
+    button, input { font: inherit; padding: 8px 12px; }
+    button { cursor: pointer; background: #f5f5f5; color: #222; border: 1px solid #aaa; border-radius: 3px; }
+    button:hover { background: #e8e8e8; }
+    nav button { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    nav button[aria-pressed="true"] { background: #222; color: white; border-color: #222; }
+    main { padding: 24px; max-width: 1400px; margin: auto; }
+    h2 { margin: 0 0 16px; font-size: 21px; }
+    .notice { color: #555; margin: 0 0 22px; }
+    .toolbar, form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-bottom: 20px; }
+    label { display: flex; flex-direction: column; gap: 5px; }
+    input { border: 1px solid #aaa; border-radius: 3px; max-width: 100%; }
+    .table-wrap { overflow-x: auto; border: 1px solid #ccc; }
+    table { border-collapse: collapse; width: 100%; text-align: left; white-space: nowrap; }
+    th, td { padding: 11px 13px; border-bottom: 1px solid #ddd; }
+    th { background: #f2f2f2; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #fafafa; }
+    #row-count { color: #555; }
+    #customer-tools { margin-top: 28px; }
+    h3 { font-size: 17px; }
+    #message { min-height: 20px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 600px) { header { padding: 18px 14px 0; } main { padding: 20px 14px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Shoe Store Database</h1>
+    <nav aria-label="Database tables">
+      <button type="button" data-entity="SHOE" aria-pressed="true">Shoes</button>
+      <button type="button" data-entity="EMPLOYEE" aria-pressed="false">Employees</button>
+      <button type="button" data-entity="DEPARTMENT" aria-pressed="false">Departments</button>
+      <button type="button" data-entity="CUSTOMER" aria-pressed="false">Customers</button>
+      <button type="button" data-entity="WISHLIST_ITEM" aria-pressed="false">Wishlist Items</button>
+      <button type="button" data-entity="SALE_REC" aria-pressed="false">Sales</button>
+    </nav>
+  </header>
+  <main>
+    <p class="notice">Sample data only. Changes on this page reset when you reload.</p>
+    <h2 id="table-title">Shoes</h2>
+    <div class="toolbar">
+      <label>Search this table
+        <input id="search" type="search" placeholder="Search any column">
+      </label>
+      <label id="date-filter" hidden>Hired on or after
+        <input id="hire-date" type="date">
+      </label>
+      <button id="clear-filters" type="button">Clear filters</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption id="table-caption" hidden>Shoes</caption>
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <p id="row-count" aria-live="polite"></p>
+
+    <section id="customer-tools" hidden aria-label="Customer operations">
+      <h3>Add customer 2999</h3>
+      <form id="add-customer">
+        <label>Customer ID<input value="2999" readonly aria-label="New customer ID"></label>
+        <label>First name<input name="Fname" required maxlength="50" autocomplete="given-name"></label>
+        <label>Last name<input name="Lname" required maxlength="50" autocomplete="family-name"></label>
+        <label>Phone<input name="Phone" type="tel" required maxlength="25" autocomplete="tel"></label>
+        <label>Email<input name="Email" type="email" required maxlength="254" autocomplete="email"></label>
+        <button type="submit">Add customer</button>
+      </form>
+      <h3>Update email for customer 2999</h3>
+      <form id="update-customer">
+        <label>New email<input name="Email" type="email" required maxlength="254"></label>
+        <button type="submit">Update email</button>
+      </form>
+      <h3>Delete customer 2999</h3>
+      <button id="delete-customer" type="button">Delete customer 2999</button>
+    </section>
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <script>
+    // Replace these sample arrays with JSON from your backend.
+    // Keep the object keys the same as the database column names.
+    const data = {
+      EMPLOYEE: [
+        { Emp_ID: 1000, Fname: 'Alex', Lname: 'Rivera', Hire_Date: '2021-08-10', Salary: 42000, Phone: '214-555-0100', Dept_ID: 1 },
+        { Emp_ID: 1001, Fname: 'Jordan', Lname: 'Lee', Hire_Date: '2023-03-15', Salary: 45000, Phone: '214-555-0101', Dept_ID: 2 },
+        { Emp_ID: 1002, Fname: 'Sam', Lname: 'Patel', Hire_Date: '2024-06-01', Salary: 43000, Phone: '214-555-0102', Dept_ID: 3 }
+      ],
+      DEPARTMENT: [
+        { Dept_ID: 1, Dept_Name: 'Sneakers', Floor_No: 1, Manager_ID: 1000 },
+        { Dept_ID: 2, Dept_Name: 'Formal Shoes', Floor_No: 2, Manager_ID: 1001 },
+        { Dept_ID: 3, Dept_Name: 'Sports Shoes', Floor_No: 1, Manager_ID: 1002 }
+      ],
+      CUSTOMER: [
+        { Customer_ID: 2000, Fname: 'Taylor', Lname: 'Brown', Phone: '214-555-0200', Email: 'taylor@example.com' },
+        { Customer_ID: 2001, Fname: 'Casey', Lname: 'Smith', Phone: '214-555-0201', Email: 'casey@example.com' }
+      ],
+      SHOE: [
+        { Shoe_ID: 3000, Brand: 'Nike', Model: 'Air Force 1', Size: 9, Color: 'White', Price: 115, Stock_Qty: 18, Dept_ID: 1 },
+        { Shoe_ID: 3001, Brand: 'Adidas', Model: 'Stan Smith', Size: 8.5, Color: 'White', Price: 100, Stock_Qty: 12, Dept_ID: 1 },
+        { Shoe_ID: 3007, Brand: 'Cole Haan', Model: 'OriginalGrand', Size: 9.5, Color: 'Brown', Price: 150, Stock_Qty: 8, Dept_ID: 2 },
+        { Shoe_ID: 3012, Brand: 'Nike', Model: 'Pegasus', Size: 9, Color: 'Blue', Price: 140, Stock_Qty: 20, Dept_ID: 3 }
+      ],
+      WISHLIST_ITEM: [
+        { Customer_ID: 2000, Item_No: 1, Shoe_ID: 3012, Date_Added: '2026-11-01', Priority_Level: 1, Notes: 'Running shoes' },
+        { Customer_ID: 2001, Item_No: 1, Shoe_ID: 3007, Date_Added: '2026-11-05', Priority_Level: 2, Notes: 'For work' }
+      ],
+      SALE_REC: [
+        { Emp_ID: 1000, Shoe_ID: 3000, Customer_ID: 2000, Date1: '2026-11-10 10:30:00', SoldQty: 1 },
+        { Emp_ID: 1001, Shoe_ID: 3007, Customer_ID: 2001, Date1: '2026-11-12 14:00:00', SoldQty: 2 }
+      ]
+    };
+
+    // Explicit columns keep the headers visible even when a table has no rows.
+    const columns = {
+      EMPLOYEE: ['Emp_ID', 'Fname', 'Lname', 'Hire_Date', 'Salary', 'Phone', 'Dept_ID'],
+      DEPARTMENT: ['Dept_ID', 'Dept_Name', 'Floor_No', 'Manager_ID'],
+      CUSTOMER: ['Customer_ID', 'Fname', 'Lname', 'Phone', 'Email'],
+      SHOE: ['Shoe_ID', 'Brand', 'Model', 'Size', 'Color', 'Price', 'Stock_Qty', 'Dept_ID'],
+      WISHLIST_ITEM: ['Customer_ID', 'Item_No', 'Shoe_ID', 'Date_Added', 'Priority_Level', 'Notes'],
+      SALE_REC: ['Emp_ID', 'Shoe_ID', 'Customer_ID', 'Date1', 'SoldQty']
+    };
+    let activeEntity = 'SHOE';
+    const $ = id => document.getElementById(id);
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+    function renderTable() {
+      let rows = data[activeEntity];
+      let keys = columns[activeEntity];
+
+      // Q1: show employee names, department names and floors for a hire date.
+      if (activeEntity === 'EMPLOYEE' && $('hire-date').value) {
+        rows = rows.filter(row => row.Hire_Date.slice(0, 10) >= $('hire-date').value)
+          .map(row => {
+            const department = data.DEPARTMENT.find(d => d.Dept_ID === row.Dept_ID);
+            return {
+              Emp_ID: row.Emp_ID,
+              Full_Name: row.Fname + ' ' + row.Lname,
+              Hire_Date: row.Hire_Date,
+              Dept_Name: department?.Dept_Name ?? '',
+              Floor_No: department?.Floor_No ?? ''
+            };
+          });
+        keys = ['Emp_ID', 'Full_Name', 'Hire_Date', 'Dept_Name', 'Floor_No'];
+      }
+
+      const term = $('search').value.trim().toLowerCase();
+      rows = rows.filter(row => keys.some(key => String(row[key] ?? '').toLowerCase().includes(term)));
+      $('table-head').replaceChildren();
+      $('table-body').replaceChildren();
+      const heading = document.createElement('tr');
+      keys.forEach(key => {
+        const cell = document.createElement('th');
+        cell.scope = 'col'; cell.textContent = key; heading.append(cell);
+      });
+      $('table-head').append(heading);
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        keys.forEach(key => {
+          const cell = document.createElement('td');
+          cell.textContent = row[key] == null ? '' :
+            (key === 'Price' || key === 'Salary') ? money.format(row[key]) : row[key];
+          tr.append(cell);
+        });
+        $('table-body').append(tr);
+      });
+      if (!rows.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = keys.length; td.textContent = 'No records found.';
+        tr.append(td); $('table-body').append(tr);
+      }
+      $('row-count').textContent = rows.length + (rows.length === 1 ? ' record' : ' records');
+    }
+
+    document.querySelectorAll('nav button').forEach(button => {
+      button.addEventListener('click', () => {
+        activeEntity = button.dataset.entity;
+        document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+        $('table-title').textContent = button.textContent;
+        $('table-caption').textContent = button.textContent;
+        $('date-filter').hidden = activeEntity !== 'EMPLOYEE';
+        $('customer-tools').hidden = activeEntity !== 'CUSTOMER';
+        $('search').value = ''; $('hire-date').value = ''; $('message').textContent = '';
+        renderTable();
+      });
+    });
+    $('search').addEventListener('input', renderTable);
+    $('hire-date').addEventListener('change', renderTable);
+    $('clear-filters').addEventListener('click', () => {
+      $('search').value = ''; $('hire-date').value = ''; renderTable();
+    });
+
+    // Q2-Q4 demo operations. Replace these array mutations with backend requests.
+    function showCustomerResult(message) {
+      $('search').value = ''; renderTable(); $('message').textContent = message;
+    }
+    $('add-customer').addEventListener('submit', event => {
+      event.preventDefault();
+      if (data.CUSTOMER.some(c => c.Customer_ID === 2999)) {
+        $('message').textContent = 'Customer 2999 already exists.'; return;
+      }
+      const fields = Object.fromEntries(new FormData(event.target));
+      Object.keys(fields).forEach(key => fields[key] = fields[key].trim());
+      if (Object.values(fields).some(value => !value)) {
+        $('message').textContent = 'Please complete every field.'; return;
+      }
+      data.CUSTOMER.push({ Customer_ID: 2999, ...fields });
+      event.target.reset();
+      showCustomerResult('Customer 2999 added to the sample data.');
+    });
+    $('update-customer').addEventListener('submit', event => {
+      event.preventDefault();
+      const customer = data.CUSTOMER.find(c => c.Customer_ID === 2999);
+      if (!customer) { $('message').textContent = 'Customer 2999 does not exist.'; return; }
+      customer.Email = new FormData(event.target).get('Email').trim();
+      event.target.reset();
+      showCustomerResult('Email updated for customer 2999 in the sample data.');
+    });
+    $('delete-customer').addEventListener('click', () => {
+      const index = data.CUSTOMER.findIndex(c => c.Customer_ID === 2999);
+      if (index === -1) { $('message').textContent = 'Customer 2999 does not exist.'; return; }
+      data.CUSTOMER.splice(index, 1);
+      showCustomerResult('Customer 2999 deleted from the sample data.');
+    });
+    renderTable();
+  </script>
+</body>
+</html>
